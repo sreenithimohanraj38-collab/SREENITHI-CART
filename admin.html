@@ -1,36 +1,142 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Admin Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Sreenithi Mart</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--gradient); color: var(--light); padding: 20px 0; flex-shrink: 0; }
+        .sidebar-logo { text-align: center; padding: 10px 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        .sidebar-logo h2 { font-size: 20px; } .sidebar-logo h2 span { color: var(--primary); }
+        .sidebar-menu { list-style: none; padding: 0; } .sidebar-menu li { margin: 4px 12px; }
+        .sidebar-menu a { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: var(--gray-dark); text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.3s; }
+        .sidebar-menu a:hover, .sidebar-menu a.active { background: rgba(254,189,105,0.15); color: var(--primary); }
+        .main-area { flex: 1; background: #f5f5f5; overflow-y: auto; }
+        .top-bar { background: var(--light); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 100; }
+        .top-bar h2 { font-size: 20px; color: var(--dark); }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--gradient-gold); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .logout-btn { padding: 8px 16px; border: 2px solid var(--danger); background: transparent; color: var(--danger); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .logout-btn:hover { background: var(--danger); color: white; }
+        .content-area { padding: 24px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: var(--light); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 16px; }
+        .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .stat-icon.blue { background: #e3f2fd; } .stat-icon.green { background: #e8f5e9; } .stat-icon.orange { background: #fff3e0; } .stat-icon.purple { background: #f3e5f5; }
+        .stat-info h3 { font-size: 24px; font-weight: 800; color: var(--dark); } .stat-info p { font-size: 13px; color: var(--text-light); }
+        .data-table { background: var(--light); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 24px; }
+        .table-header { padding: 16px 20px; border-bottom: 1px solid var(--gray); display: flex; justify-content: space-between; align-items: center; }
+        .table-header h3 { font-size: 16px; color: var(--dark); }
+        table { width: 100%; border-collapse: collapse; } th, td { padding: 12px 16px; text-align: left; font-size: 13px; }
+        th { background: #f8f9fa; font-weight: 700; color: var(--dark-2); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        td { border-bottom: 1px solid var(--gray); color: var(--text); } tr:hover td { background: #f8f9fa; }
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+        .badge-green { background: #e8f5e9; color: #2e7d32; } .badge-red { background: #ffebee; color: #c62828; } .badge-orange { background: #fff3e0; color: #ef6c00; } .badge-blue { background: #e3f2fd; color: #1565c0; }
+        .section { display: none; } .section.active { display: block; }
+        .action-btn { padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-right: 4px; }
+        .action-btn.view { background: #e3f2fd; color: #1565c0; } .action-btn.delete { background: #ffebee; color: #c62828; } .action-btn.edit { background: #fff3e0; color: #ef6c00; }
+    </style>
 </head>
-<body style="margin:0; font-family:Arial; background:#0f172a; color:white;">
-
-<div style="background:#1e293b; padding:20px;">
-    <h1>SreenithiMart Admin Dashboard</h1>
-</div>
-
-<div style="padding:30px;">
-
-    <div style="background:#1e293b; padding:20px; border-radius:10px; margin-bottom:20px;">
-        <h2>Total Users</h2>
-        <p>120</p>
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="sidebar-logo"><h2>🛒 SREENITHI <span>MART</span></h2></div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" onclick="showSection('dashboard', this)">📊 Dashboard</a></li>
+                <li><a href="#" onclick="showSection('products', this)">📦 Products</a></li>
+                <li><a href="#" onclick="showSection('sellers', this)">🏪 Sellers</a></li>
+                <li><a href="#" onclick="showSection('buyers', this)">🛍️ Buyers</a></li>
+                <li><a href="#" onclick="showSection('orders', this)">📋 Orders</a></li>
+                <li><a href="#" onclick="showSection('settings', this)">⚙️ Settings</a></li>
+            </ul>
+        </aside>
+        <div class="main-area">
+            <div class="top-bar">
+                <h2 id="pageTitle">Dashboard</h2>
+                <div class="user-info">
+                    <div class="user-avatar">👨‍💼</div>
+                    <div><div class="user-name" id="userName">Admin</div><div class="user-role">Administrator</div></div>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <div class="content-area">
+                <div class="section active" id="section-dashboard">
+                    <div class="stats-grid">
+                        <div class="stat-card"><div class="stat-icon blue">📦</div><div class="stat-info"><h3 id="totalProducts">0</h3><p>Total Products</p></div></div>
+                        <div class="stat-card"><div class="stat-icon green">🏪</div><div class="stat-info"><h3 id="totalSellers">0</h3><p>Total Sellers</p></div></div>
+                        <div class="stat-card"><div class="stat-icon orange">🛍️</div><div class="stat-info"><h3 id="totalBuyers">0</h3><p>Total Buyers</p></div></div>
+                        <div class="stat-card"><div class="stat-icon purple">📋</div><div class="stat-info"><h3 id="totalOrders">0</h3><p>Total Orders</p></div></div>
+                    </div>
+                    <div class="data-table"><div class="table-header"><h3>Recent Orders</h3></div><table><thead><tr><th>Order ID</th><th>Buyer</th><th>Product</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentOrdersTable"></tbody></table></div>
+                </div>
+                <div class="section" id="section-products"><div class="data-table"><div class="table-header"><h3>All Products</h3></div><table><thead><tr><th>ID</th><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Rating</th><th>Actions</th></tr></thead><tbody id="productsTable"></tbody></table></div></div>
+                <div class="section" id="section-sellers"><div class="data-table"><div class="table-header"><h3>All Sellers</h3></div><table><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead><tbody id="sellersTable"></tbody></table></div></div>
+                <div class="section" id="section-buyers"><div class="data-table"><div class="table-header"><h3>All Buyers</h3></div><table><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Actions</th></tr></thead><tbody id="buyersTable"></tbody></table></div></div>
+                <div class="section" id="section-orders"><div class="data-table"><div class="table-header"><h3>All Orders</h3></div><table><thead><tr><th>Order ID</th><th>Buyer</th><th>Seller</th><th>Product</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody id="ordersTable"></tbody></table></div></div>
+                <div class="section" id="section-settings"><div class="data-table"><div class="table-header"><h3>Platform Settings</h3></div><div style="padding:20px;"><p>Platform settings panel.</p></div></div></div>
+            </div>
+        </div>
     </div>
+    <script>
+        const user = JSON.parse(localStorage.getItem('sreenithiMartUser') || 'null');
+        if (user) document.getElementById('userName').textContent = user.name || 'Admin';
 
-    <div style="background:#1e293b; padding:20px; border-radius:10px; margin-bottom:20px;">
-        <h2>Total Products</h2>
-        <p>350</p>
-    </div>
+        const sellers = [
+            { id: 101, name: 'Kumar Electronics', email: 'kumar@sreenithimart.com', status: 'Active' },
+            { id: 102, name: 'Fashion Hub', email: 'fashion@sreenithimart.com', status: 'Active' },
+            { id: 103, name: 'Home Essentials', email: 'home@sreenithimart.com', status: 'Pending' },
+            { id: 104, name: 'Book World', email: 'books@sreenithimart.com', status: 'Active' },
+            { id: 105, name: 'Beauty Store', email: 'beauty@sreenithimart.com', status: 'Inactive' },
+        ];
+        const buyers = [
+            { id: 201, name: 'Arun Kumar', email: 'arun@email.com' },
+            { id: 202, name: 'Priya Sharma', email: 'priya@email.com' },
+            { id: 203, name: 'Rahul Verma', email: 'rahul@email.com' },
+            { id: 204, name: 'Sneha Patel', email: 'sneha@email.com' },
+            { id: 205, name: 'Vikram Singh', email: 'vikram@email.com' },
+        ];
+        const orders = [
+            { id: 'ORD001', buyer: 'Arun Kumar', seller: 'Kumar Electronics', product: 'Wireless Earbuds', amount: 1999, status: 'Delivered', date: '2024-01-15' },
+            { id: 'ORD002', buyer: 'Priya Sharma', seller: 'Fashion Hub', product: 'Summer Dress', amount: 1199, status: 'Shipped', date: '2024-01-14' },
+            { id: 'ORD003', buyer: 'Rahul Verma', seller: 'Home Essentials', product: 'Air Fryer', amount: 4999, status: 'Processing', date: '2024-01-13' },
+            { id: 'ORD004', buyer: 'Sneha Patel', seller: 'Book World', product: 'Atomic Habits', amount: 299, status: 'Delivered', date: '2024-01-12' },
+            { id: 'ORD005', buyer: 'Vikram Singh', seller: 'Beauty Store', product: 'Face Serum', amount: 599, status: 'Cancelled', date: '2024-01-11' },
+        ];
 
-    <div style="background:#1e293b; padding:20px; border-radius:10px;">
-        <h2>Total Orders</h2>
-        <p>89</p>
-    </div>
-
-    <br>
-
-    <a href="login.html" style="color:#60a5fa;">Logout</a>
-
-</div>
-
+        let allProducts = [];
+        async function loadDashboard() {
+            try {
+                const res = await fetch('http://localhost:8080/api/products');
+                const data = await res.json();
+                allProducts = data.products;
+                document.getElementById('totalProducts').textContent = data.totalProducts;
+                document.getElementById('totalSellers').textContent = sellers.length;
+                document.getElementById('totalBuyers').textContent = buyers.length;
+                document.getElementById('totalOrders').textContent = orders.length;
+                document.getElementById('recentOrdersTable').innerHTML = orders.slice(0, 5).map(o => `<tr><td><strong>${o.id}</strong></td><td>${o.buyer}</td><td>${o.product}</td><td>₹${o.amount.toLocaleString()}</td><td><span class="badge ${getStatusClass(o.status)}">${o.status}</span></td><td>${o.date}</td></tr>`).join('');
+            } catch (e) { console.error(e); }
+        }
+        function loadProducts() { document.getElementById('productsTable').innerHTML = allProducts.map(p => `<tr><td>${p.id}</td><td><strong>${p.name}</strong></td><td><span class="badge badge-blue">${p.category}</span></td><td>₹${p.price.toLocaleString()}</td><td>${p.inStock ? '<span class="badge badge-green">In Stock</span>' : '<span class="badge badge-red">Out</span>'}</td><td>⭐ ${p.rating}</td><td><button class="action-btn view">View</button><button class="action-btn edit">Edit</button><button class="action-btn delete">Delete</button></td></tr>`).join(''); }
+        function loadSellers() { document.getElementById('sellersTable').innerHTML = sellers.map(s => `<tr><td>${s.id}</td><td><strong>${s.name}</strong></td><td>${s.email}</td><td><span class="badge ${s.status === 'Active' ? 'badge-green' : s.status === 'Pending' ? 'badge-orange' : 'badge-red'}">${s.status}</span></td><td><button class="action-btn view">View</button><button class="action-btn edit">Edit</button></td></tr>`).join(''); }
+        function loadBuyers() { document.getElementById('buyersTable').innerHTML = buyers.map(b => `<tr><td>${b.id}</td><td><strong>${b.name}</strong></td><td>${b.email}</td><td><button class="action-btn view">View</button></td></tr>`).join(''); }
+        function loadOrders() { document.getElementById('ordersTable').innerHTML = orders.map(o => `<tr><td><strong>${o.id}</strong></td><td>${o.buyer}</td><td>${o.seller}</td><td>${o.product}</td><td>₹${o.amount.toLocaleString()}</td><td><span class="badge ${getStatusClass(o.status)}">${o.status}</span></td><td>${o.date}</td></tr>`).join(''); }
+        function getStatusClass(s) { return s === 'Delivered' ? 'badge-green' : s === 'Shipped' ? 'badge-blue' : s === 'Processing' ? 'badge-orange' : 'badge-red'; }
+        function showSection(section, element) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+            document.getElementById('section-' + section).classList.add('active');
+            element.classList.add('active');
+            const titles = { dashboard: 'Dashboard', products: 'Products', sellers: 'Sellers', buyers: 'Buyers', orders: 'Orders', settings: 'Settings' };
+            document.getElementById('pageTitle').textContent = titles[section] || 'Dashboard';
+            if (section === 'products') loadProducts();
+            if (section === 'sellers') loadSellers();
+            if (section === 'buyers') loadBuyers();
+            if (section === 'orders') loadOrders();
+        }
+        function logout() { localStorage.removeItem('sreenithiMartUser'); localStorage.removeItem('sreenithiMartRole'); window.location.href = 'login.html'; }
+        loadDashboard();
+    </script>
 </body>
 </html>

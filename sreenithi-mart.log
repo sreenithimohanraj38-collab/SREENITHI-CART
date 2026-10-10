@@ -1,0 +1,70 @@
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.fusesource.jansi.internal.JansiLoader in an unnamed module (file:/C:/Users/VARSHNI/AppData/Local/Temp/opencode/apache-maven-3.9.9/lib/jansi-2.4.1.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper (file:/C:/Users/VARSHNI/AppData/Local/Temp/opencode/apache-maven-3.9.9/lib/guava-33.2.1-jre.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+WARNING: Final field _cipher in class org.sonatype.plexus.components.sec.dispatcher.DefaultSecDispatcher has been mutated reflectively by class org.eclipse.sisu.bean.BeanPropertyField in unnamed module @5af97850 (file:/C:/Users/VARSHNI/AppData/Local/Temp/opencode/apache-maven-3.9.9/lib/org.eclipse.sisu.inject-0.9.0.M3.jar)
+WARNING: Use --enable-final-field-mutation=ALL-UNNAMED to avoid a warning
+WARNING: Mutating final fields will be blocked in a future release unless final field mutation is enabled
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< com.sreenithimart:sreenithi-mart >------------------
+[INFO] Building Sreenithi Mart 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.2.0:run (default-cli) > test-compile @ sreenithi-mart >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sreenithi-mart ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ sreenithi-mart ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 12 source files with javac [debug release 17] to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sreenithi-mart ---
+[INFO] skip non existing resourceDirectory C:\Users\VARSHNI\OneDrive\Documents\Default Project\sreenithi-mart\backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ sreenithi-mart ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] <<< spring-boot:3.2.0:run (default-cli) < test-compile @ sreenithi-mart <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.2.0:run (default-cli) @ sreenithi-mart ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.0)
+
+2026-10-10T07:22:53.838+05:30  INFO 13404 --- [sreenithi-mart] [           main] c.s.shop.SreenithiMartApplication        : Starting SreenithiMartApplication using Java 27 with PID 13404 (C:\Users\VARSHNI\OneDrive\Documents\Default Project\sreenithi-mart\backend\target\classes started by VARSHNI in C:\Users\VARSHNI\OneDrive\Documents\Default Project\sreenithi-mart\backend)
+2026-10-10T07:22:53.843+05:30  INFO 13404 --- [sreenithi-mart] [           main] c.s.shop.SreenithiMartApplication        : No active profile set, falling back to 1 default profile: "default"
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (file:/C:/Users/VARSHNI/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.16/tomcat-embed-core-10.1.16.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+2026-10-10T07:22:55.189+05:30  INFO 13404 --- [sreenithi-mart] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-10-10T07:22:55.211+05:30  INFO 13404 --- [sreenithi-mart] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-10T07:22:55.212+05:30  INFO 13404 --- [sreenithi-mart] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.16]
+2026-10-10T07:22:55.344+05:30  INFO 13404 --- [sreenithi-mart] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-10-10T07:22:55.345+05:30  INFO 13404 --- [sreenithi-mart] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1435 ms
+2026-10-10T07:22:55.865+05:30  INFO 13404 --- [sreenithi-mart] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2026-10-10T07:22:55.875+05:30  INFO 13404 --- [sreenithi-mart] [           main] c.s.shop.SreenithiMartApplication        : Started SreenithiMartApplication in 2.642 seconds (process running for 3.25)
+========================================
+  Sreenithi Mart Backend Started!
+  http://localhost:8080/api/products
+========================================
+2026-10-10T07:23:25.031+05:30  INFO 13404 --- [sreenithi-mart] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-10T07:23:25.031+05:30  INFO 13404 --- [sreenithi-mart] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-10T07:23:25.032+05:30  INFO 13404 --- [sreenithi-mart] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms

@@ -1,46 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>SreenithiMart Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sreenithi Mart</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--gradient); padding: 20px; }
+        .login-box { background: var(--light); border-radius: 16px; padding: 40px; width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .login-logo { text-align: center; margin-bottom: 30px; }
+        .login-logo h1 { font-size: 28px; color: var(--dark); }
+        .login-logo h1 span { color: var(--primary-dark); }
+        .login-logo p { color: var(--text-light); font-size: 14px; margin-top: 4px; }
+        .role-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+        .role-tab { flex: 1; padding: 12px; border: 2px solid var(--gray); background: var(--light); border-radius: 10px; cursor: pointer; text-align: center; font-size: 14px; font-weight: 600; color: var(--text-light); transition: all 0.3s; }
+        .role-tab:hover { border-color: var(--primary); }
+        .role-tab.active { border-color: var(--primary); background: #fff8e7; color: var(--dark); }
+        .role-tab .role-icon { font-size: 24px; display: block; margin-bottom: 4px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--dark-2); margin-bottom: 6px; }
+        .form-group input { width: 100%; padding: 12px 16px; border: 2px solid var(--gray); border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.3s; box-sizing: border-box; }
+        .form-group input:focus { border-color: var(--primary); }
+        .login-btn { width: 100%; padding: 14px; border: none; background: var(--gradient-gold); color: var(--dark); font-size: 16px; font-weight: 700; border-radius: 10px; cursor: pointer; transition: all 0.3s; margin-top: 8px; }
+        .login-btn:hover { background: var(--primary-dark); transform: scale(1.02); box-shadow: 0 4px 15px rgba(254,189,105,0.4); }
+        .login-footer { text-align: center; margin-top: 20px; }
+        .login-footer a { color: var(--primary-dark); text-decoration: none; font-size: 14px; font-weight: 600; }
+        .error-msg { color: var(--danger); font-size: 13px; text-align: center; margin-top: 10px; display: none; }
+        .success-msg { color: var(--success); font-size: 13px; text-align: center; margin-top: 10px; display: none; }
+    </style>
 </head>
-<body style="background:#0f172a; color:white; font-family:Arial; display:flex; justify-content:center; align-items:center; height:100vh;">
-
-<div style="background:#1e293b; padding:30px; border-radius:12px; width:350px;">
-    <h2 style="text-align:center;">SreenithiMart Login</h2>
-
-    <input type="email" placeholder="Email" style="width:100%; padding:10px; margin:10px 0;">
-
-    <input type="password" placeholder="Password" style="width:100%; padding:10px; margin:10px 0;">
-
-    <select id="role" style="width:100%; padding:10px; margin:10px 0;">
-        <option>Buyer</option>
-        <option>Seller</option>
-        <option>Admin</option>
-    </select>
-
-    <button id="loginBtn" style="width:100%; padding:10px; background:#2563eb; color:white; border:none; border-radius:8px;">
-        Login
-    </button>
-
-    <p style="text-align:center;">
-        New User?
-        <a href="register.html" style="color:#60a5fa;">Register</a>
-    </p>
-</div>
-
-<script>
-document.getElementById("loginBtn").addEventListener("click", function () {
-    const role = document.getElementById("role").value;
-
-    if (role === "Admin") {
-        window.location.href = "admin.html";
-    } else if (role === "Seller") {
-        window.location.href = "seller.html";
-    } else {
-        window.location.href = "buyer.html";
-    }
-});
-</script>
-
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-logo">
+                <h1>🛒 SREENITHI <span>MART</span></h1>
+                <p>Login to your account</p>
+            </div>
+            <div class="role-tabs">
+                <div class="role-tab active" onclick="setRole('admin', this)"><span class="role-icon">👨‍💼</span>Admin</div>
+                <div class="role-tab" onclick="setRole('seller', this)"><span class="role-icon">🏪</span>Seller</div>
+                <div class="role-tab" onclick="setRole('buyer', this)"><span class="role-icon">🛍️</span>Buyer</div>
+            </div>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group"><label>Email</label><input type="email" id="email" placeholder="Enter your email" required></div>
+                <div class="form-group"><label>Password</label><input type="password" id="password" placeholder="Enter your password" required></div>
+                <button type="submit" class="login-btn">Login 🚀</button>
+            </form>
+            <div class="error-msg" id="errorMsg"></div>
+            <div class="success-msg" id="successMsg"></div>
+            <div class="login-footer"><a href="index.html">← Back to Sreenithi Mart</a></div>
+        </div>
+    </div>
+    <script>
+        let selectedRole = 'admin';
+        function setRole(role, element) { selectedRole = role; document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active')); element.classList.add('active'); }
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+            errorMsg.style.display = 'none'; successMsg.style.display = 'none';
+            try {
+                const response = await fetch('http://localhost:8080/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password, role: selectedRole }) });
+                const data = await response.json();
+                if (response.ok && data.success) {
+                    localStorage.setItem('sreenithiMartUser', JSON.stringify(data.user));
+                    localStorage.setItem('sreenithiMartRole', selectedRole);
+                    successMsg.textContent = 'Login successful! Redirecting...'; successMsg.style.display = 'block';
+                    setTimeout(() => { if (selectedRole === 'admin') window.location.href = 'admin.html'; else if (selectedRole === 'seller') window.location.href = 'seller.html'; else window.location.href = 'buyer.html'; }, 1000);
+                } else { errorMsg.textContent = data.message || 'Login failed!'; errorMsg.style.display = 'block'; }
+            } catch (error) { errorMsg.textContent = 'Cannot connect to server.'; errorMsg.style.display = 'block'; }
+        }
+    </script>
 </body>
 </html>

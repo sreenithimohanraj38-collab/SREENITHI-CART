@@ -1,39 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Buyer Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer - Sreenithi Mart</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .buyer-header { background: var(--gradient); padding: 12px 24px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .buyer-header .logo { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .buyer-header .logo-text { font-size: 22px; font-weight: 800; color: var(--light); }
+        .buyer-header .logo-text .highlight { color: var(--primary); }
+        .search-bar { flex: 1; display: flex; max-width: 600px; min-width: 200px; border-radius: 8px; overflow: hidden; }
+        .search-bar input { flex: 1; padding: 10px 16px; border: none; font-size: 14px; outline: none; }
+        .search-btn { padding: 10px 20px; border: none; background: var(--gradient-gold); color: var(--text); font-weight: 600; cursor: pointer; }
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+        .action-btn { padding: 8px 16px; border: 2px solid var(--primary); background: transparent; color: var(--light); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .action-btn:hover { background: var(--primary); color: var(--dark); }
+        .cart-count { background: var(--danger); color: white; border-radius: 50%; padding: 2px 7px; font-size: 11px; margin-left: 4px; }
+        .category-nav { display: flex; gap: 4px; padding: 8px 24px; background: var(--dark-2); overflow-x: auto; }
+        .cat-btn { padding: 6px 16px; border: none; background: transparent; color: var(--gray-dark); font-size: 13px; font-weight: 500; cursor: pointer; border-radius: 20px; transition: all 0.3s; white-space: nowrap; }
+        .cat-btn:hover { background: rgba(255,255,255,0.15); color: var(--light); }
+        .cat-btn.active { background: var(--primary); color: var(--dark); font-weight: 700; }
+        .buyer-content { max-width: 1400px; margin: 0 auto; padding: 24px 20px; }
+        .welcome-banner { background: linear-gradient(135deg, #fff8e7 0%, #fff3cd 100%); border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+        .welcome-banner h2 { color: var(--dark); font-size: 20px; }
+        .welcome-banner p { color: var(--text-light); font-size: 14px; margin-top: 4px; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+        .product-card { background: var(--light); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; display: flex; flex-direction: column; }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+        .product-image { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 24px; text-align: center; position: relative; min-height: 140px; display: flex; align-items: center; justify-content: center; }
+        .product-emoji { font-size: 56px; }
+        .discount-badge { position: absolute; top: 8px; left: 8px; background: var(--danger); color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+        .product-info { padding: 14px; flex: 1; display: flex; flex-direction: column; }
+        .product-category { font-size: 10px; color: var(--success); font-weight: 600; text-transform: uppercase; }
+        .product-name { font-size: 14px; font-weight: 700; margin: 4px 0; }
+        .product-rating { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; font-size: 12px; color: var(--text-light); }
+        .product-price { margin-bottom: 10px; }
+        .current-price { font-size: 18px; font-weight: 800; }
+        .original-price { font-size: 12px; color: var(--text-light); text-decoration: line-through; margin-left: 6px; }
+        .add-to-cart-btn { margin-top: auto; padding: 10px; border: none; background: var(--gradient-gold); color: var(--text); font-size: 13px; font-weight: 700; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .add-to-cart-btn:hover { background: var(--primary-dark); }
+        .cart-sidebar { position: fixed; top: 0; right: -400px; width: 380px; max-width: 90%; height: 100%; background: var(--light); box-shadow: -4px 0 20px rgba(0,0,0,0.15); z-index: 2000; transition: right 0.3s; display: flex; flex-direction: column; }
+        .cart-sidebar.show { right: 0; }
+        .cart-header { padding: 16px 20px; background: var(--gradient); color: var(--light); display: flex; justify-content: space-between; align-items: center; }
+        .cart-items { flex: 1; overflow-y: auto; padding: 16px; }
+        .cart-item { display: flex; gap: 12px; padding: 10px; border-bottom: 1px solid var(--gray); }
+        .cart-item-emoji { font-size: 28px; }
+        .cart-item-info { flex: 1; }
+        .cart-item-info h4 { font-size: 13px; }
+        .cart-item-info p { color: var(--success); font-weight: 700; font-size: 13px; }
+        .cart-item-controls { display: flex; align-items: center; gap: 6px; }
+        .cart-item-controls button { width: 24px; height: 24px; border: 1px solid var(--gray-dark); background: var(--light); border-radius: 4px; cursor: pointer; }
+        .cart-footer { padding: 16px 20px; border-top: 2px solid var(--gray); }
+        .cart-total { font-size: 16px; margin-bottom: 12px; }
+        .checkout-btn { width: 100%; padding: 12px; border: none; background: var(--gradient-gold); border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1500; }
+        .overlay.show { display: block; }
+        .notification { position: fixed; top: 80px; right: 20px; background: var(--success); color: white; padding: 12px 20px; border-radius: 8px; font-weight: 600; z-index: 3000; transform: translateX(150%); transition: transform 0.3s; }
+        .notification.show { transform: translateX(0); }
+    </style>
 </head>
-<body style="margin:0; font-family:Arial; background:#0f172a; color:white;">
-
-<div style="background:#1e293b; padding:20px;">
-    <h1>SreenithiMart Buyer Dashboard</h1>
-</div>
-
-<div style="padding:30px;">
-
-    <div style="background:#1e293b; padding:20px; border-radius:10px; margin-bottom:20px;">
-        <h2>Search Products</h2>
-
-        <input type="text" placeholder="Search..." style="width:100%; padding:10px; margin:10px 0;">
+<body>
+    <header class="buyer-header">
+        <div class="logo"><span style="font-size:28px;">🛒</span><span class="logo-text">SREENITHI <span class="highlight">MART</span></span></div>
+        <div class="search-bar"><input type="text" id="searchInput" placeholder="Search products..."><button class="search-btn" onclick="searchProducts()">🔍</button></div>
+        <div class="header-actions">
+            <button class="action-btn" onclick="showCart()">🛒 Cart <span class="cart-count" id="cartCount">0</span></button>
+            <button class="action-btn" onclick="logout()">Logout</button>
+        </div>
+    </header>
+    <nav class="category-nav">
+        <button class="cat-btn active" onclick="loadAllProducts(); setActive(this)">All</button>
+        <button class="cat-btn" onclick="filterCategory('Electronics'); setActive(this)">Electronics</button>
+        <button class="cat-btn" onclick="filterCategory('Fashion'); setActive(this)">Fashion</button>
+        <button class="cat-btn" onclick="filterCategory('Home & Kitchen'); setActive(this)">Home & Kitchen</button>
+        <button class="cat-btn" onclick="filterCategory('Books'); setActive(this)">Books</button>
+        <button class="cat-btn" onclick="filterCategory('Beauty'); setActive(this)">Beauty</button>
+        <button class="cat-btn" onclick="filterCategory('Sports'); setActive(this)">Sports</button>
+    </nav>
+    <main class="buyer-content">
+        <div class="welcome-banner"><div><h2>Welcome, <span id="buyerName">Buyer</span>! 👋</h2><p>Shop the best deals at Sreenithi Mart — Up to 60% OFF!</p></div><div style="font-size:48px;">🛍️</div></div>
+        <div class="products-grid" id="productsGrid"><div class="loading"><div class="spinner"></div><p>Loading products...</p></div></div>
+    </main>
+    <div class="overlay" id="overlay" onclick="hideCart()"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header"><h3>🛒 Your Cart</h3><button onclick="hideCart()" style="background:none;border:none;color:white;font-size:20px;cursor:pointer;">✕</button></div>
+        <div class="cart-items" id="cartItems"><p style="text-align:center;padding:40px;color:var(--text-light);">Your cart is empty!</p></div>
+        <div class="cart-footer" id="cartFooter" style="display:none;"><div class="cart-total">Total: <strong id="cartTotal">₹0</strong></div><button class="checkout-btn" onclick="checkout()">Checkout 🚀</button></div>
     </div>
-
-    <div style="background:#1e293b; padding:20px; border-radius:10px;">
-        <h2>Available Products</h2>
-
-        <p>Laptop - ₹45,000</p>
-        <button>Add to Cart</button>
-
-        <hr>
-
-        <p>Mobile - ₹18,000</p>
-        <button>Add to Cart</button>
-    </div>
-
-    <br>
-
-    <a href="login.html" style="color:#60a5fa;">Logout</a>
-
-</div>
-
+    <script>
+        const user = JSON.parse(localStorage.getItem('sreenithiMartUser') || 'null');
+        const currentUser = user || { id: 201, name: 'Guest Buyer', address: 'Chennai, TN' };
+        document.getElementById('buyerName').textContent = currentUser.name;
+        let allProducts = []; let cart = [];
+        async function loadAllProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading...</p></div>';
+            try { const res = await fetch('http://localhost:8080/api/products'); const data = await res.json(); allProducts = data.products; renderProducts(allProducts); } catch (e) { grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:40px;">Cannot connect to server.</p>'; }
+        }
+        async function searchProducts() { const kw = document.getElementById('searchInput').value.trim(); if (!kw) { loadAllProducts(); return; } try { const res = await fetch(`http://localhost:8080/api/search?keyword=${encodeURIComponent(kw)}`); const data = await res.json(); renderProducts(data.results); } catch (e) {} }
+        async function filterCategory(cat) { try { const res = await fetch(`http://localhost:8080/api/category/${encodeURIComponent(cat)}`); const products = await res.json(); renderProducts(products); } catch (e) {} }
+        function renderProducts(products) {
+            const grid = document.getElementById('productsGrid');
+            if (!products.length) { grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:40px;">No products found.</p>'; return; }
+            grid.innerHTML = products.map(p => { const discount = p.originalPrice > p.price ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100) : 0; return `<div class="product-card"><div class="product-image"><span class="product-emoji">${p.imageUrl}</span>${discount > 0 ? `<span class="discount-badge">-${discount}%</span>` : ''}</div><div class="product-info"><span class="product-category">${p.category}</span><h3 class="product-name">${p.name}</h3><div class="product-rating">⭐ ${p.rating} (${p.reviews})</div><div class="product-price"><span class="current-price">₹${p.price.toLocaleString()}</span>${p.originalPrice > p.price ? `<span class="original-price">₹${p.originalPrice.toLocaleString()}</span>` : ''}</div><button class="add-to-cart-btn" onclick="addToCart(${p.id})">🛒 Add to Cart</button></div></div>`; }).join('');
+        }
+        function addToCart(id) { const product = allProducts.find(p => p.id === id); if (!product) return; const existing = cart.find(i => i.id === id); if (existing) { existing.quantity++; } else { cart.push({ ...product, quantity: 1 }); } updateCartCount(); showNotification(`${product.name} added to cart! 🛒`); }
+        function updateCartCount() { document.getElementById('cartCount').textContent = cart.reduce((s, i) => s + i.quantity, 0); }
+        function showCart() { renderCart(); document.getElementById('cartSidebar').classList.add('show'); document.getElementById('overlay').classList.add('show'); }
+        function hideCart() { document.getElementById('cartSidebar').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); }
+        function renderCart() { const container = document.getElementById('cartItems'); const footer = document.getElementById('cartFooter'); if (!cart.length) { container.innerHTML = '<p style="text-align:center;padding:40px;color:var(--text-light);">Your cart is empty!</p>'; footer.style.display = 'none'; return; } footer.style.display = 'block'; container.innerHTML = cart.map(item => `<div class="cart-item"><span class="cart-item-emoji">${item.imageUrl}</span><div class="cart-item-info"><h4>${item.name}</h4><p>₹${item.price.toLocaleString()}</p></div><div class="cart-item-controls"><button onclick="updateQty(${item.id}, -1)">−</button><span>${item.quantity}</span><button onclick="updateQty(${item.id}, 1)">+</button></div></div>`).join(''); document.getElementById('cartTotal').textContent = '₹' + cart.reduce((s, i) => s + i.price * i.quantity, 0).toLocaleString(); }
+        function updateQty(id, delta) { const item = cart.find(i => i.id === id); if (!item) return; item.quantity += delta; if (item.quantity <= 0) cart = cart.filter(i => i.id !== id); updateCartCount(); renderCart(); }
+        async function checkout() {
+            if (!cart.length) return;
+            const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+            for (const item of cart) { const order = { buyerId: currentUser.id, buyerName: currentUser.name, sellerId: 101, sellerName: 'Kumar Electronics', productId: item.id, productName: item.name, quantity: item.quantity, amount: item.price * item.quantity, status: 'Processing', orderDate: new Date().toISOString().split('T')[0], deliveryAddress: currentUser.address }; try { await fetch('http://localhost:8080/api/buyer/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(order) }); } catch (e) {} }
+            alert(`🎉 Order placed successfully!\nTotal: ₹${total.toLocaleString()}\nThank you for shopping at SREENITHI MART! 🛒`);
+            cart = []; updateCartCount(); hideCart();
+        }
+        function setActive(btn) { document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+        function showNotification(msg) { const n = document.createElement('div'); n.className = 'notification show'; n.textContent = msg; document.body.appendChild(n); setTimeout(() => { n.classList.remove('show'); setTimeout(() => n.remove(), 300); }, 2000); }
+        function logout() { localStorage.removeItem('sreenithiMartUser'); localStorage.removeItem('sreenithiMartRole'); window.location.href = 'index.html'; }
+        document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') searchProducts(); });
+        loadAllProducts();
+    </script>
 </body>
 </html>

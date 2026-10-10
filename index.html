@@ -1,11 +1,221 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>SreenithiMart</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sreenithi Mart - Shop the Best</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body style="background:#0f172a;color:white;text-align:center;font-family:Arial;padding:80px;">
-<h1>SreenithiMart</h1>
-<h3>Multi-Role E-Commerce Website</h3>
-<a href="login.html" style="background:#2563eb;color:white;padding:12px 20px;text-decoration:none;border-radius:8px;">Go to Login</a>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="logo" onclick="loadAllProducts()">
+                <span class="logo-icon">🛒</span>
+                <span class="logo-text">SREENITHI <span class="highlight">MART</span></span>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search for products, brands...">
+                <button class="search-btn" onclick="searchProducts()">🔍 Search</button>
+            </div>
+            <div class="header-actions">
+                <button class="action-btn" onclick="window.location.href='login.html'">👤 Login</button>
+                <button class="action-btn" onclick="window.location.href='admin.html'">👨‍💼 Admin</button>
+                <button class="action-btn" onclick="window.location.href='seller.html'">🏪 Seller</button>
+                <button class="action-btn" onclick="window.location.href='buyer.html'">🛍️ Buyer</button>
+                <button class="action-btn cart-btn" onclick="showCart()">🛒 Cart <span class="cart-count" id="cartCount">0</span></button>
+            </div>
+        </div>
+        <nav class="category-nav" id="categoryNav">
+            <button class="cat-btn active" onclick="loadAllProducts(); setActiveCategory(this)">All</button>
+            <button class="cat-btn" onclick="filterCategory('Electronics'); setActiveCategory(this)">Electronics</button>
+            <button class="cat-btn" onclick="filterCategory('Fashion'); setActiveCategory(this)">Fashion</button>
+            <button class="cat-btn" onclick="filterCategory('Home & Kitchen'); setActiveCategory(this)">Home & Kitchen</button>
+            <button class="cat-btn" onclick="filterCategory('Books'); setActiveCategory(this)">Books</button>
+            <button class="cat-btn" onclick="filterCategory('Beauty'); setActiveCategory(this)">Beauty</button>
+            <button class="cat-btn" onclick="filterCategory('Sports'); setActiveCategory(this)">Sports</button>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to <span class="brand-highlight">SREENITHI MART</span></h1>
+            <p>Your One-Stop Shop for Everything! 🎉</p>
+            <p class="hero-sub">Electronics | Fashion | Home | Books | Beauty & More</p>
+            <div class="hero-badge">🔥 MEGA SALE - Up to 60% OFF 🔥</div>
+        </div>
+    </section>
+
+    <div class="stats-bar">
+        <div class="stat-item"><span class="stat-number" id="totalProducts">0</span><span class="stat-label">Products</span></div>
+        <div class="stat-item"><span class="stat-number">6</span><span class="stat-label">Categories</span></div>
+        <div class="stat-item"><span class="stat-number">50K+</span><span class="stat-label">Happy Customers</span></div>
+        <div class="stat-item"><span class="stat-number">4.5★</span><span class="stat-label">Average Rating</span></div>
+    </div>
+
+    <main class="main-content">
+        <div class="section-header">
+            <h2 id="sectionTitle">All Products</h2>
+            <p class="tagline">Shop the Best — Only at Sreenithi Mart!</p>
+        </div>
+        <div class="products-grid" id="productsGrid">
+            <div class="loading"><div class="spinner"></div><p>Loading amazing products...</p></div>
+        </div>
+    </main>
+
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h2>🛒 Your Cart - SREENITHI MART</h2>
+                <button class="close-btn" onclick="hideCart()">✕</button>
+            </div>
+            <div class="cart-items" id="cartItems"><p class="empty-cart">Your cart is empty!</p></div>
+            <div class="cart-footer" id="cartFooter">
+                <div class="cart-total">Total: <strong id="cartTotal">₹0</strong></div>
+                <button class="checkout-btn" onclick="checkout()">Checkout 🚀</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>🛒 SREENITHI <span class="highlight">MART</span></h3>
+                <p>Your trusted online shopping destination since 2024.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="#">About Us</a><a href="#">Contact</a><a href="#">FAQ</a><a href="#">Returns</a>
+            </div>
+            <div class="footer-links">
+                <h4>Categories</h4>
+                <a href="#">Electronics</a><a href="#">Fashion</a><a href="#">Home & Kitchen</a><a href="#">Books</a>
+            </div>
+            <div class="footer-links">
+                <h4>Support</h4>
+                <a href="#">Shipping Info</a><a href="#">Track Order</a><a href="#">Privacy Policy</a><a href="#">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 <strong>SREENITHI MART</strong>. All rights reserved. Made with ❤️</p>
+        </div>
+    </footer>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8080/api';
+        let allProducts = [];
+        let cart = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAllProducts();
+            document.getElementById('searchInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') searchProducts(); });
+        });
+
+        async function loadAllProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading amazing products...</p></div>';
+            try {
+                const response = await fetch(`${API_BASE_URL}/products`);
+                const data = await response.json();
+                allProducts = data.products;
+                document.getElementById('totalProducts').textContent = data.totalProducts;
+                renderProducts(allProducts);
+                document.getElementById('sectionTitle').textContent = 'All Products';
+            } catch (error) {
+                grid.innerHTML = '<div class="error-message"><h3>⚠️ Cannot connect to server</h3><p>Please make sure the Java backend is running on port 8080.</p></div>';
+            }
+        }
+
+        async function searchProducts() {
+            const keyword = document.getElementById('searchInput').value.trim();
+            if (!keyword) { loadAllProducts(); return; }
+            try {
+                const response = await fetch(`${API_BASE_URL}/search?keyword=${encodeURIComponent(keyword)}`);
+                const data = await response.json();
+                renderProducts(data.results);
+                document.getElementById('sectionTitle').textContent = `Search: "${keyword}"`;
+            } catch (error) {}
+        }
+
+        async function filterCategory(category) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/category/${encodeURIComponent(category)}`);
+                const products = await response.json();
+                renderProducts(products);
+                document.getElementById('sectionTitle').textContent = category;
+            } catch (error) {}
+        }
+
+        function renderProducts(products) {
+            const grid = document.getElementById('productsGrid');
+            if (products.length === 0) { grid.innerHTML = '<div class="empty-state"><h3>No products found!</h3></div>'; return; }
+            grid.innerHTML = products.map(product => {
+                const stars = '⭐'.repeat(Math.floor(product.rating));
+                const discount = product.originalPrice > product.price ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
+                return `<div class="product-card">
+                    <div class="product-image"><span class="product-emoji">${product.imageUrl}</span>${discount > 0 ? `<span class="discount-badge">-${discount}%</span>` : ''}</div>
+                    <div class="product-info">
+                        <span class="product-category">${product.category}</span>
+                        <h3 class="product-name">${product.name}</h3>
+                        <p class="product-desc">${product.description}</p>
+                        <div class="product-rating"><span class="stars">${stars}</span><span class="rating-text">${product.rating} (${product.reviews.toLocaleString()})</span></div>
+                        <div class="product-price"><span class="current-price">₹${product.price.toLocaleString()}</span>${product.originalPrice > product.price ? `<span class="original-price">₹${product.originalPrice.toLocaleString()}</span>` : ''}</div>
+                        <button class="add-to-cart-btn" onclick="addToCart(${product.id})">🛒 Add to Cart</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function addToCart(productId) {
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) return;
+            const existing = cart.find(item => item.id === productId);
+            if (existing) { existing.quantity++; } else { cart.push({ ...product, quantity: 1 }); }
+            updateCartCount();
+            showNotification(`${product.name} added to cart! 🛒`);
+        }
+
+        function removeFromCart(productId) { cart = cart.filter(item => item.id !== productId); updateCartCount(); renderCart(); }
+        function updateQuantity(productId, delta) {
+            const item = cart.find(i => i.id === productId);
+            if (!item) return;
+            item.quantity += delta;
+            if (item.quantity <= 0) removeFromCart(productId); else { updateCartCount(); renderCart(); }
+        }
+        function updateCartCount() { document.getElementById('cartCount').textContent = cart.reduce((sum, item) => sum + item.quantity, 0); }
+
+        function renderCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartFooter = document.getElementById('cartFooter');
+            if (cart.length === 0) { cartItems.innerHTML = '<p class="empty-cart">Your cart is empty!</p>'; cartFooter.style.display = 'none'; return; }
+            cartFooter.style.display = 'flex';
+            cartItems.innerHTML = cart.map(item => `<div class="cart-item"><span class="cart-item-emoji">${item.imageUrl}</span><div class="cart-item-info"><h4>${item.name}</h4><p>₹${item.price.toLocaleString()}</p></div><div class="cart-item-controls"><button onclick="updateQuantity(${item.id}, -1)">−</button><span>${item.quantity}</span><button onclick="updateQuantity(${item.id}, 1)">+</button></div><button class="remove-btn" onclick="removeFromCart(${item.id})">🗑️</button></div>`).join('');
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('cartTotal').textContent = `₹${total.toLocaleString()}`;
+        }
+
+        function showCart() { renderCart(); document.getElementById('cartModal').classList.add('show'); }
+        function hideCart() { document.getElementById('cartModal').classList.remove('show'); }
+
+        async function checkout() {
+            if (cart.length === 0) return;
+            const user = JSON.parse(localStorage.getItem('sreenithiMartUser') || '{}');
+            const currentUser = user || { id: 201, name: 'Guest Buyer', address: 'Chennai, TN' };
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            for (const item of cart) {
+                const order = { buyerId: currentUser.id, buyerName: currentUser.name, sellerId: 101, sellerName: 'Kumar Electronics', productId: item.id, productName: item.name, quantity: item.quantity, amount: item.price * item.quantity, status: 'Processing', orderDate: new Date().toISOString().split('T')[0], deliveryAddress: currentUser.address };
+                try { await fetch(`${API_BASE_URL}/buyer/orders`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(order) }); } catch (e) {}
+            }
+            alert(`🎉 Order placed successfully!\nTotal: ₹${total.toLocaleString()}\nThank you for shopping at SREENITHI MART! 🛒`);
+            cart = []; updateCartCount(); hideCart();
+        }
+
+        function setActiveCategory(btn) { document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+        function showNotification(message) {
+            const notif = document.createElement('div'); notif.className = 'notification'; notif.textContent = message;
+            document.body.appendChild(notif); setTimeout(() => notif.classList.add('show'), 10);
+            setTimeout(() => { notif.classList.remove('show'); setTimeout(() => notif.remove(), 300); }, 2500);
+        }
+        document.getElementById('cartModal').addEventListener('click', (e) => { if (e.target.id === 'cartModal') hideCart(); });
+    </script>
 </body>
 </html>

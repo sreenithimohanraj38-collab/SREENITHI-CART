@@ -1,0 +1,24 @@
+{
+  "name": "college-navigator-pwa",
+  "version": "1.0.0",
+  "description": "Mobile-first college navigation PWA with outdoor Google Maps navigation and offline indoor campus navigation",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve -l 3000 .",
+    "dev": "npx serve -l 3000 --cors .",
+    "test": "echo \"Open http://localhost:3000 in your browser\""
+  },
+  "keywords": [
+    "pwa",
+    "navigation",
+    "college",
+    "gps",
+    "offline",
+    "geolocation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.0.0"
+  }
+}
